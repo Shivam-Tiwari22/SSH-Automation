@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Define the variables for remote host, username, and password
+HOST=example.com
+USER=username
+PASSWORD=mysecretpassword
+
+# Prompt to verify the details
+echo "Connect to $USER@$HOST using password $PASSWORD?"
+read -p "Are the details correct? (y/n) " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+  # Automatically log into the remote machine
+  expect << EOF
+    spawn ssh $USER@$HOST
+    expect "password:"
+    send "$PASSWORD\r"
+    interact
+  EOF
+else
+  # Abort the script if the details are incorrect
+  echo "Aborting script."
+  exit 1
+fi
